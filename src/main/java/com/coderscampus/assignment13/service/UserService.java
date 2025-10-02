@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.coderscampus.assignment13.domain.Address;
+import com.coderscampus.assignment13.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +18,15 @@ import com.coderscampus.assignment13.repository.UserRepository;
 @Service
 public class UserService {
 	
-	@Autowired
+	@Autowired//fix this
 	private UserRepository userRepo;
 	@Autowired
 	private AccountRepository accountRepo;
+
+	@Autowired
+	private AddressRepository addressRepository;
+	@Autowired
+	private AddressService addressService;
 	
 	public List<User> findByUsername(String username) {
 		return userRepo.findByUsername(username);
@@ -58,12 +65,27 @@ public class UserService {
 			Account savings = new Account();
 			savings.setAccountName("Savings Account");
 			savings.getUsers().add(user);
-			
 			user.getAccounts().add(checking);
 			user.getAccounts().add(savings);
 			accountRepo.save(checking);
 			accountRepo.save(savings);
 		}
+		if (!addressService.isAddressEmpty(user.getAddress())) {
+			Address address = user.getAddress();
+			address.setUser(user);
+			user.setAddress(address);
+		} else {
+			user.setAddress(null);
+		}
+		if(!user.getAccounts().isEmpty()) {
+			List<Account> accounts = user.getAccounts();
+			for(Account account: accounts) {
+				if(!account.getUsers().contains(user)) {
+					account.getUsers().add(user);
+				}
+			}
+		}
+
 		return userRepo.save(user);
 	}
 

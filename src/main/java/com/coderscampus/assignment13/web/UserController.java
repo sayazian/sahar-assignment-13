@@ -1,8 +1,9 @@
 package com.coderscampus.assignment13.web;
 
-import java.util.Arrays;
 import java.util.Set;
 
+import com.coderscampus.assignment13.domain.Account;
+import com.coderscampus.assignment13.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,6 +19,9 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private AccountService accountService;
 	
 	@GetMapping("/register")
 	public String getCreateUser (ModelMap model) {
@@ -42,22 +46,20 @@ public class UserController {
 		if (users.size() == 1) {
 			model.put("user", users.iterator().next());
 		}
-		
 		return "users";
 	}
 	
 	@GetMapping("/users/{userId}")
 	public String getOneUser (ModelMap model, @PathVariable Long userId) {
 		User user = userService.findById(userId);
-		model.put("users", Arrays.asList(user));
 		model.put("user", user);
-		return "users";
+		return "user";
 	}
 	
 	@PostMapping("/users/{userId}")
 	public String postOneUser (User user) {
 		userService.saveUser(user);
-		return "redirect:/users/"+user.getUserId();
+		return "redirect:/users/" + user.getUserId();
 	}
 	
 	@PostMapping("/users/{userId}/delete")
@@ -65,4 +67,29 @@ public class UserController {
 		userService.delete(userId);
 		return "redirect:/users";
 	}
+
+	@GetMapping("/users/{userId}/accounts/{accountId}")
+	public String getOneAccount (ModelMap model, @PathVariable Long userId, @PathVariable Long accountId) {
+		Account account = accountService.findById(accountId);
+		model.put("account", account);
+		return "account";
+	}
+
+	@PostMapping("/users/{userId}/accounts/{accountId}")
+	public String postOneAccount (@PathVariable Long userId, Account account) {
+		accountService.saveAccount(account);
+		return "redirect:/users/" + userId + "/accounts/" + account.getAccountId();
+	}
+
+	@PostMapping("/users/{userId}/newAccount")
+	public String createOneAccount (ModelMap model, @PathVariable Long userId) {
+		User user = userService.findById(userId);
+		Account account = new Account();
+		user.getAccounts().add(account);
+		account.getUsers().add(user);
+		accountService.saveAccount(account);
+		model.put("account", account);
+		return "redirect:/users/" + user.getUserId() + "/accounts/" + account.getAccountId();
+	}
+
 }

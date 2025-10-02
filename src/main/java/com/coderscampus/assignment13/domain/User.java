@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,7 +26,8 @@ public class User {
 	private LocalDate createdDate;
 	private List<Account> accounts = new ArrayList<>();
 	private Address address;
-	
+
+
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getUserId() {
 		return userId;
@@ -51,7 +53,6 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
 	public LocalDate getCreatedDate() {
 		return createdDate;
 	}
@@ -68,18 +69,28 @@ public class User {
 	public void setAccounts(List<Account> accounts) {
 		this.accounts = accounts;
 	}
-	@OneToOne(mappedBy = "user")
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "address_id")
 	public Address getAddress() {
 		return address;
 	}
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", name=" + name
-				+ ", accounts=" + accounts + ", address=" + address + "]";
+		return "User{" +
+				"userId=" + userId +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", name='" + name + '\'' +
+				", createdDate=" + createdDate +
+				", accounts=" + accounts +
+				", address=" + address +
+				'}';
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

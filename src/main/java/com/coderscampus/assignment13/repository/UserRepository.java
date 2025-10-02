@@ -12,7 +12,6 @@ import com.coderscampus.assignment13.domain.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	
 	// select * from users where username = :username
 	List<User> findByUsername(String username);
 	
