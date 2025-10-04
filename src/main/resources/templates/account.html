@@ -3,12 +3,12 @@
 <head>
     <style>
         .links {
-display: flex;
-flex-direction: row;
-align-items: left;
-justify-content: left;
-padding-right: 10px;
-}
+                display: flex;
+                flex-direction: row;
+                align-items: left;
+                justify-content: left;
+                padding-right: 10px;
+        }
     </style>
     <title>Account</title>
 </head>
@@ -20,7 +20,8 @@ padding-right: 10px;
         <div>
             Account Name: <input type="text" th:field="${account.accountName}"/>
         </div>
-        <form th:action="@{/users/{userId}/accounts/{accountId}(userId=${userId}, accountId=${account.accountId})}" method="post">
+        <form th:action="@{/users/{userId}/accounts/{accountId}(userId=${userId}, accountId=${account.accountId})}"
+              method="post">
             <input type="submit" value="Save Account"/>
         </form>
     </form>

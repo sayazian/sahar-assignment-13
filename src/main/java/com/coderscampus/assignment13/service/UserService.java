@@ -6,8 +6,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.coderscampus.assignment13.domain.Address;
-import com.coderscampus.assignment13.repository.AddressRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coderscampus.assignment13.domain.Account;
@@ -18,30 +16,29 @@ import com.coderscampus.assignment13.repository.UserRepository;
 @Service
 public class UserService {
 
-    @Autowired//fix this
-    private UserRepository userRepo;
-    @Autowired
-    private AccountRepository accountRepo;
-
-    @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
+    private UserRepository userRepository;
+    private AccountRepository accountRepository;
     private AddressService addressService;
 
+    public UserService(UserRepository userRepositorysitory, AccountRepository accountRepository, AddressService addressService) {
+        this.userRepository = userRepositorysitory;
+        this.accountRepository = accountRepository;
+        this.addressService = addressService;
+    }
     public List<User> findByUsername(String username) {
-        return userRepo.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
 
     public List<User> findByNameAndUsername(String name, String username) {
-        return userRepo.findByNameAndUsername(name, username);
+        return userRepository.findByNameAndUsername(name, username);
     }
 
     public List<User> findByCreatedDateBetween(LocalDate date1, LocalDate date2) {
-        return userRepo.findByCreatedDateBetween(date1, date2);
+        return userRepository.findByCreatedDateBetween(date1, date2);
     }
 
     public User findExactlyOneUserByUsername(String username) {
-        List<User> users = userRepo.findExactlyOneUserByUsername(username);
+        List<User> users = userRepository.findExactlyOneUserByUsername(username);
         if (users.size() > 0)
             return users.get(0);
         else
@@ -49,11 +46,11 @@ public class UserService {
     }
 
     public Set<User> findAll() {
-        return userRepo.findAllUsersWithAccountsAndAddresses();
+        return userRepository.findAllUsersWithAccountsAndAddresses();
     }
 
     public User findById(Long userId) {
-        Optional<User> userOpt = userRepo.findById(userId);
+        Optional<User> userOpt = userRepository.findById(userId);
         return userOpt.orElse(new User());
     }
 
@@ -65,7 +62,7 @@ public class UserService {
         if (isNewUser) {
             managedUser = setNewUserAccounts(user);
         } else {
-            managedUser = userRepo.findById(user.getUserId())
+            managedUser = userRepository.findById(user.getUserId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
             user.setAccounts(managedUser.getAccounts());
         }
@@ -85,7 +82,7 @@ public class UserService {
             }
         }
 
-        return userRepo.save(managedUser);
+        return userRepository.save(managedUser);
     }
 
     private static void updateUserInfoFromForm(User user, User managedUser) {
@@ -103,8 +100,8 @@ public class UserService {
         savings.getUsers().add(user);
         user.getAccounts().add(checking);
         user.getAccounts().add(savings);
-        accountRepo.save(checking);
-        accountRepo.save(savings);
+        accountRepository.save(checking);
+        accountRepository.save(savings);
         return user;
     }
 
@@ -118,6 +115,6 @@ public class UserService {
     }
 
     public void delete(Long userId) {
-        userRepo.deleteById(userId);
+        userRepository.deleteById(userId);
     }
 }

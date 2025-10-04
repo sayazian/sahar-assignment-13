@@ -4,7 +4,6 @@ import java.util.Set;
 
 import com.coderscampus.assignment13.domain.Account;
 import com.coderscampus.assignment13.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,17 +16,17 @@ import com.coderscampus.assignment13.service.UserService;
 @Controller
 public class UserController {
 	
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
+	private final AccountService accountService;
 
-	@Autowired
-	private AccountService accountService;
+	public UserController(UserService userService, AccountService accountService) {
+		this.userService = userService;
+		this.accountService = accountService;
+	}
 	
 	@GetMapping("/register")
 	public String getCreateUser (ModelMap model) {
-		
 		model.put("user", new User());
-		
 		return "register";
 	}
 	
