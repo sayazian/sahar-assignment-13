@@ -45,6 +45,7 @@
 			</form>
 		</div>
 		<hr/>
+		<h1>Accounts</h1>
 		<div th:each="account : ${user.accounts}">
 			<a th:text="${account.accountName}" th:href="@{/users/{userId}/accounts/{accountId}(userId=${userId}, accountId=${account.accountId})}" ></a><br/>
 		</div>
@@ -52,6 +53,8 @@
 		<form th:action="@{/users/{userId}/newAccount(userId=${user.userId})}" method="post">
 			<input type="submit" value="Create New Bank Account"/>
 		</form>
+		<hr/>
+		<a th:href="@{/users}">All Users</a>
 
 	</body>
 </html>

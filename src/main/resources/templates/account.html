@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org">
 <head>
+    <style>
+        .links {
+display: flex;
+flex-direction: row;
+align-items: left;
+justify-content: left;
+padding-right: 10px;
+}
+    </style>
     <title>Account</title>
 </head>
 <body>
@@ -11,12 +20,15 @@
         <div>
             Account Name: <input type="text" th:field="${account.accountName}"/>
         </div>
-        <hr>
         <form th:action="@{/users/{userId}/accounts/{accountId}(userId=${userId}, accountId=${account.accountId})}" method="post">
             <input type="submit" value="Save Account"/>
         </form>
     </form>
-    <a th:href="@{/users/{userId}(userId=${userId})}">Back</a>
+    <hr/>
+    <div class="links">
+        <div class="links"><a th:href="@{/users/{userId}(userId=${userId})}">User [[${userId}]] </a></div>
+        <div class="links"><a th:href="@{/users}">All Users</a></div>
+    </div>
 </div>
 </body>
 </html>

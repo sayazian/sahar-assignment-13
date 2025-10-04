@@ -70,7 +70,7 @@ public class User {
 		this.accounts = accounts;
 	}
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "address_id")
+//	@JoinColumn(name = "address_id")
 	public Address getAddress() {
 		return address;
 	}
